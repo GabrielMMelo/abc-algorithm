@@ -15,11 +15,11 @@ int main(){
   cout << tester_bee.distance << endl;
   cout << tester_bee.scout << endl;
   */
-  ABC abc;
-  abc.print_colony();
   Tsplib tsplib;
   // tsplib.print_instance();
   tsplib.print_distances();
+  ABC abc(&tsplib);
+  abc.print_colony();
 
   return 0;
 }
