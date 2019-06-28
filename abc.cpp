@@ -62,3 +62,13 @@ void ABC::print_colony() {
       std::cout << "    Food Source " << j << " = " << colony[i][j] << std::endl;
   }
 }
+
+void ABC::generate_population() {
+  for ( auto i = 0; i < HALF_COLONY; i++){
+    for ( auto j = 0; j < this->D; j++){
+      /* NOTE: is needed to initialize the colony's vector with the sequentially D's index order */
+      this->colony.at(i).at(j) /* = random.permutation(D), in the truth, will be used the #include<algorithm> std::random_shuffle */;
+      /* std::random_shuffle ( myvector.begin(), myvector.end() ); */
+    }
+  }
+}
