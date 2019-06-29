@@ -15,10 +15,11 @@ ABC::ABC(Tsplib *tsp) {
 
   this->better_fitness = 0;
   this->attempts = std::vector<int>(HALF_COLONY);
-  this->fitness = std::vector<int>(HALF_COLONY);
+  this->fitness = std::vector<double>(HALF_COLONY);
   this->better_solution = std::vector<double>(this->D);
-  this->colony = std::vector<std::vector<double>>(HALF_COLONY, std::vector<double>(this->D));
+  this->better_fitnesses = std::vector<double>(MAX_ITER);
   this->better_solutions = std::vector<std::vector<double>>(MAX_ITER, std::vector<double>(this->D));
+  this->colony = std::vector<std::vector<double>>(HALF_COLONY, std::vector<double>(this->D));
 
   this->fill_vectors();
 }
@@ -31,7 +32,7 @@ void ABC::fill_vectors(){
   /* colony */
   for ( auto i = 0; i < HALF_COLONY; i++){
     for ( auto j = 0; j < this->D; j++){
-      this->colony.at(i).at(j) = 0;
+      this->colony.at(i).at(j) = j;
     }
   }
 
@@ -39,6 +40,11 @@ void ABC::fill_vectors(){
   for ( auto i = 0; i < HALF_COLONY; i++){
     this->attempts.at(i) = 0;
     this->fitness.at(i) = 0;
+  }
+
+  /* better_fitnesses */
+  for ( auto i = 0; i < MAX_ITER; i++){
+    this->better_fitnesses.at(i) = 0;
   }
 
   /* better_solutions */
@@ -65,10 +71,16 @@ void ABC::print_colony() {
 
 void ABC::generate_population() {
   for ( auto i = 0; i < HALF_COLONY; i++){
-    for ( auto j = 0; j < this->D; j++){
-      /* NOTE: is needed to initialize the colony's vector with the sequentially D's index order */
-      this->colony.at(i).at(j) /* = random.permutation(D), in the truth, will be used the #include<algorithm> std::random_shuffle */;
-      /* std::random_shuffle ( myvector.begin(), myvector.end() ); */
-    }
+    std::random_shuffle ( this->colony.at(i).begin(), this->colony.at(i).end() );  // TODO: USE CUSTOM RANDOM ALGORITHM
+    this->fitness.at(i) = this->calculate_fitness(this->colony.at(i));
   }
+}
+
+double ABC::calculate_fitness(std::vector<double> solutions){
+  double fitness = 0.0;
+  for ( auto i = 0; i < solutions.size() - 1; i++){
+    fitness += this->tsp->distances.at(solutions.at(i)).at(solutions.at(i+1));
+  }
+  fitness += this->tsp->distances.at(solutions.at(solutions.size()-1)).at(solutions.at(0));
+  return fitness;
 }

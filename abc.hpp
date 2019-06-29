@@ -2,7 +2,8 @@
 #define ABC_HPP
 
 #include <iostream>
-#include <vector>
+#include <vector>                                        // std::vector
+#include <algorithm>                                     // std::random_shuffle
 #include "bee.hpp"
 #include "tsplib.hpp"
 
@@ -23,7 +24,7 @@ public:
   int D;                                                 // dimensões do problema (i.e., número de cidades)
   std::vector<std::vector<double>> colony;               // matriz que armazena a quantidade de alimento retirado por cada abelha em cada fonte de alimento;
   std::vector<int> attempts;                             // relacionado à this->limit
-  std::vector<int> fitness;                              // qualidade das fontes de alimento das abelhas
+  std::vector<double> fitness;                              // qualidade das fontes de alimento das abelhas
   std::vector<double> better_solution;                   // melhor solução atual
   double better_fitness;                                 // valor de fitness da melhor solução atual
   std::vector<std::vector<double>> better_solutions;     // melhores soluções de cada execução do algoritmo
@@ -34,13 +35,14 @@ public:
   /* METHODS */
   ABC(Tsplib*);
   ~ABC();
+  void fill_vectors();
   void print_colony();
   void generate_population();
+  double calculate_fitness(std::vector<double>);
   void employees_phase();
   void calc_probabilities();
   void onlookers_phase();
   void scouts_phase();
-  void fill_vectors();
 };
 
 #endif

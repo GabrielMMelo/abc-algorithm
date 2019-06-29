@@ -20,6 +20,8 @@ int main(){
   tsplib.print_distances();
   ABC abc(&tsplib);
   abc.print_colony();
+  abc.generate_population();
+  abc.print_colony();
 
   return 0;
 }
